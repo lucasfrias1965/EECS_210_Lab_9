@@ -19,18 +19,15 @@ program labnine
     integer :: int_space
     integer :: check_n
     integer :: i, j
+    integer :: sum_result
+    integer :: a, b, c
 
     !declare our heap allocated matrix
 
     integer, allocatable :: matrix(:, :)
     integer, allocatable :: identity(:, :)
     integer, allocatable :: result(:, :)
- 
 
-    !get the user input
-    !TODO: get the actual lab code
-
-     
 
     n_size = 0
     print *, "Enter your matrix:"
@@ -148,7 +145,18 @@ program labnine
         ! stuff this isn't shocking. but its not a library, its built 
         ! into like fortran 90 so i think its fair.
         ! so take mercy on me 
-        result = matmul(result, matrix)
+        
+        do a=1, n_size 
+            do b = 1, n_size
+               sum_result = 0;
+               do c = 1, n_size 
+                    sum_result = sum_result + ( matrix(a, c) * result(c, b) )
+               end do
+               result(a, b) = sum_result
+            end do 
+        end do
+        
+        
     end do
 
 
