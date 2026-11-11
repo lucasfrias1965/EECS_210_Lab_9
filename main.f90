@@ -41,8 +41,6 @@ program labnine
     end do
     !okay now we know nsize
 
-    print '(I0)', n_size
-
     !lets dallocate this
 
     allocate(matrix(n_size, n_size))
@@ -106,20 +104,20 @@ program labnine
         do j = 1, n_size
 
             if (j == i) then
-                rowspace(j) = 1
+                identity(i, j) = 1
             else 
-                rowspace(j) = 0
+                identity(i, j) = 0
             end if
 
         end do
-        !we have to assign exactly rowspace's sizing
-        !relative to n_size
-        identity(i, 1:n_size) = rowspace(1:n_size)
 
     end do
 
     matrix = matrix + identity
-    do i = 1, n_size - 2
+    result = identity
+
+
+    do i = 1, n_size - 1
         result = matmul(result, matrix)
     end do
 
@@ -130,7 +128,8 @@ program labnine
     else
         print *, "Graph is not connected"
     end if
-    
+
+        
 
    deallocate (matrix) 
    deallocate (identity)
