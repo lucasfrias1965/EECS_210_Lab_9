@@ -1,11 +1,27 @@
 program labnine 
+    implicit none
+    ! LAB 09
+    ! by lucas frias
+    ! <@
+    ! (KU//
+    !  "
+    ! rock chalk!
+    ! pardas wednesday 8:00 AM
+    ! eecs 210
+    ! description: using the DFS
+    ! algorithm, will calculate whether 
+    ! a graph is connected or not connected
     character(len=20) :: rowline
     integer, dimension(10) :: rowspace
     integer :: n_size 
     integer :: int_space
     integer :: check_n
+    integer :: i, j
 
     integer, allocatable :: matrix(:, :)
+    integer, allocatable :: identity(:, :)
+    integer, allocatable :: result(:, :)
+ 
 
     
     n_size = 0
@@ -19,8 +35,9 @@ program labnine
 
         read (rowline(i:i), *) int_space
 
-        rowspace (n_size) = int_space
         n_size = n_size + 1 
+        rowspace (n_size) = int_space
+
     end do
     !okay now we know nsize
 
@@ -29,7 +46,13 @@ program labnine
     !lets dallocate this
 
     allocate(matrix(n_size, n_size))
+    allocate(identity(n_size, n_size))
+    allocate(result(n_size, n_size))
 
+
+    !put the value in
+
+    matrix(1, 1:n_size) = rowspace(1:n_size)
     !put the value in
 
     matrix(1, 1:n_size) = rowspace(1:n_size)
@@ -55,8 +78,8 @@ program labnine
             read (rowline(j:j), *) int_space
         
             !set rowspace
-            rowspace (check_n) = int_space
             check_n = check_n + 1 
+            rowspace (check_n) = int_space
 
         end do
         
@@ -72,9 +95,44 @@ program labnine
     !but not really sure
 
 
+    !https://thequantasticjournal.com/how-a-matrix-can-tell-if-a-graph-is-connected-d14702bad69e 
+
+    !we're gonna do the (A+I)^n-1        
+   
+    !first lets generate i 
+   
+    do i = 1, n_size
+
+        do j = 1, n_size
+
+            if (j == i) then
+                rowspace(j) = 1
+            else 
+                rowspace(j) = 0
+            end if
+
+        end do
+        !we have to assign exactly rowspace's sizing
+        !relative to n_size
+        identity(i, 1:n_size) = rowspace(1:n_size)
+
+    end do
+
+    matrix = matrix + identity
+    do i = 1, n_size - 2
+        result = matmul(result, matrix)
+    end do
+
+
+    !https://gcc.gnu.org/onlinedocs/gfortran/ALL.html
+    if (all(result > 0)) then
+        print *, "Graph is connected"
+    else
+        print *, "Graph is not connected"
+    end if
     
 
-        
-
    deallocate (matrix) 
+   deallocate (identity)
+
 end program labnine 
